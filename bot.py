@@ -1,5 +1,6 @@
 import logging
 
+from emoji import emojize
 from glob import glob
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from random import randint, choice
@@ -9,7 +10,8 @@ logging.basicConfig(filename='bot.log', level=logging.INFO)
 
 def greet_user(update, context):
     print('Вызван /start')
-    update.message.reply_text('Привет, пользователь! Ты вызвал команду /start')
+    context.user_data['emoji'] = get_smile(context.user_data)
+    update.message.reply_text(f'Здравствуй пользователь {context.user_data["emoji"]}!')
 
 def guess_number(update, context):
     if context.args:
@@ -22,11 +24,17 @@ def guess_number(update, context):
         message = 'Введите число'
     update.message.reply_text(message)
 
+def get_smile(user_data):
+    if 'emoji' not in user_data:
+        smile = choice(settings.USER_EMOJI)
+        return emojize(smile, language='alias')
+    return user_data['emoji']
+
 def talk_to_me(update, context):
-    print(context.args)
-    user_text = update.message.text 
-    print(user_text)
-    update.message.reply_text(user_text)
+    context.user_data['emoji'] = get_smile(context.user_data)
+    username = update.effective_user.first_name
+    text = update.message.text
+    update.message.reply_text(f'Здравствуй, {username} {context.user_data["emoji"]}! Ты написал: {text}')
 
 def play_random_numbers(user_number):
     bot_number = randint(user_number - 10, user_number + 10)
