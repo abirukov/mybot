@@ -2,6 +2,7 @@ from glob import glob
 from random import choice
 from utils import get_smile, main_keyboard, play_random_numbers
 
+
 def greet_user(update, context):
     print('Вызван /start')
     context.user_data['emoji'] = get_smile(context.user_data)
@@ -9,6 +10,7 @@ def greet_user(update, context):
             f'Здравствуй пользователь {context.user_data["emoji"]}!',
             reply_markup=main_keyboard()
         )
+
 
 def guess_number(update, context):
     if context.args:
@@ -21,6 +23,7 @@ def guess_number(update, context):
         message = 'Введите число'
     update.message.reply_text(message)
 
+
 def talk_to_me(update, context):
     context.user_data['emoji'] = get_smile(context.user_data)
     username = update.effective_user.first_name
@@ -29,7 +32,8 @@ def talk_to_me(update, context):
             f'Здравствуй, {username} {context.user_data["emoji"]}! Ты написал: {text}',
             reply_markup=main_keyboard()
         )
-    
+
+
 def send_cat_picture(update, context):
     cat_photos_list = glob('images/cat*.jp*g')
     cat_photo_filename = choice(cat_photos_list)
@@ -39,6 +43,7 @@ def send_cat_picture(update, context):
             photo=open(cat_photo_filename, 'rb'),
             reply_markup=main_keyboard()
         )
+
 
 def user_coordinates(update, context):
     context.user_data['emoji'] = get_smile(context.user_data)
