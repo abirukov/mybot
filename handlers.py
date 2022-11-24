@@ -7,9 +7,9 @@ def greet_user(update, context):
     print('Вызван /start')
     context.user_data['emoji'] = get_smile(context.user_data)
     update.message.reply_text(
-            f'Здравствуй пользователь {context.user_data["emoji"]}!',
-            reply_markup=main_keyboard()
-        )
+        f'Здравствуй пользователь {context.user_data["emoji"]}!',
+        reply_markup=main_keyboard()
+    )
 
 
 def guess_number(update, context):
@@ -29,9 +29,9 @@ def talk_to_me(update, context):
     username = update.effective_user.first_name
     text = update.message.text
     update.message.reply_text(
-            f'Здравствуй, {username} {context.user_data["emoji"]}! Ты написал: {text}',
-            reply_markup=main_keyboard()
-        )
+        f'Здравствуй, {username} {context.user_data["emoji"]}! Ты написал: {text}',
+        reply_markup=main_keyboard()
+    )
 
 
 def send_cat_picture(update, context):
@@ -39,10 +39,10 @@ def send_cat_picture(update, context):
     cat_photo_filename = choice(cat_photos_list)
     chat_id = update.effective_chat.id
     context.bot.send_photo(
-            chat_id=chat_id, 
-            photo=open(cat_photo_filename, 'rb'),
-            reply_markup=main_keyboard()
-        )
+        chat_id=chat_id,
+        photo=open(cat_photo_filename, 'rb'),
+        reply_markup=main_keyboard()
+    )
 
 
 def user_coordinates(update, context):
@@ -52,3 +52,12 @@ def user_coordinates(update, context):
         f"Ваши координаты {coords} {context.user_data['emoji']}!",
         reply_markup=main_keyboard()
     )
+
+
+def word_count(update, context):
+    if len(context.args) > 0:
+        count_words = len(context.args)
+        message = f"{count_words} слова"
+    else:
+        message = 'Введите строку'
+    update.message.reply_text(message)
