@@ -22,7 +22,7 @@ def get_calc_parts(user_expression):
     elements.append(int(first_element))
     user_expression = user_expression.replace(first_element, "", 1)
     is_expression_valid = re.match(VALIDATE_EXPRESSION_REGEX, user_expression)
-    if is_expression_valid == None:
+    if is_expression_valid is None:
         return False
     remaining_elements = re.findall(GET_ELEMENTS_EXPRESSION_REGEX, user_expression)
     for group in remaining_elements:
@@ -59,3 +59,32 @@ def calc(update, context):
     else:
         message = "Введите выражение"
     update.message.reply_text(message)
+
+
+def calc2(update, context):
+    if context.args:
+        if not context.args[0]:
+            message = "Выражение не верно"
+        else:
+            try:
+                message = calculation(context.args[0])
+            except ZeroDivisionError:
+                message = "Деление на ноль невозможно"
+    else:
+        message = "Введите выражение"
+    update.message.reply_text(message)
+
+
+def calculation(user_input: str) -> str:
+    if len(user_input) < 3:
+        return "Слишком коротко."
+
+    for symbol_ in user_input:
+        if symbol_ not in "0123456789-+/* ":
+            return "Ты ввёл НЕ только цифры и операторы!"
+
+    if not any(calc_operator in user_input for calc_operator in ["+", "-", "*", "/"]):
+        return "Ты НЕ ввёл оператор вычисления."
+
+    result = eval(user_input)
+    return f"Результат: {result:.2f}"
